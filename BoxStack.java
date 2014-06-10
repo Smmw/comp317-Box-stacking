@@ -70,7 +70,7 @@ public class BoxStack implements Comparable{
 	public LinkedList<Box> toList(){
 		LinkedList<Box> list = new LinkedList<Box>();
 		for (Node node = this.top; node != null; node = node.getBase()){
-			list.offerFirst(node.getBox());
+			list.offerLast(node.getBox());
 		}
 		return list;
 	}
