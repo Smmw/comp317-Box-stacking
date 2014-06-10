@@ -181,6 +181,25 @@ public class GeneticAlgorithm {
     }
 
     /**
+     * Creates a genetic algorithm object.  The constructor just
+     * checks the compiled parameters.
+     */
+    public GeneticAlgorithm() {
+	// Check POOL_SIZE
+	int ratioSum = KEEP_RATIO + BREED_RATIO + MUTATE_RATIO;
+	if (POOL_SIZE != ratioSum) {
+	    System.err.println("GA ratios don't sum to POOL_SIZE!");
+	    throw new RuntimeException("Invalid configuration.");
+	}
+
+	// Check KEEP_RATIO
+	if (KEEP_RATIO < 2) {
+	    System.err.println("KEEP_RATIO < 2 means no breeding pairs!");
+	    throw new RuntimeException("Invalid configuration.");
+	}
+    }
+
+    /**
      * Finds the highest stack that can be made by a set of boxes.
      *
      * @param boxes The boxes that can be used to form a stack
