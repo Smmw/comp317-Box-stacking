@@ -7,7 +7,7 @@
  * 	a job this important anyway.
  */
 public class BoxStack{
-	protected double height;
+	protected int height;
 	protected Node top; 	// I also want to call it head, leaf and tail
 							// it depends how you think about it
 	/*
@@ -49,7 +49,7 @@ public class BoxStack{
 	/*
 	 * Returns the height of the stack
 	 */
-	public double getHeight(){
+	public int getHeight(){
 		return this.height;
 	}
 	

@@ -2,15 +2,15 @@
  * A box
  */
 public class Box{
-	private double height;
-	private double longSide;
-	private double shortSide;
+	private int height;
+	private int longSide;
+	private int shortSide;
 
 	/*
 	 * Makes a box, will make the long side the long side on it's own.
 	 * It doesn't trust you anyway.
 	 */
-	public Box(double height, double side1, double side2){
+	public Box(int height, int side1, int side2){
 		this.height = height;
 		this.longSide = side1 > side2 ? side1 : side2;
 		this.shortSide = side2 > side1 ? side1 : side2;
@@ -19,21 +19,21 @@ public class Box{
 	/*
 	 * Returns the height of the box
 	 */
-	public double getHeight(){
+	public int getHeight(){
 		return this.height;
 	}
 
 	/*
 	 * Returns the long side
 	 */
-	public double getLongSide(){
+	public int getLongSide(){
 		return this.longSide;
 	}
 
 	/* 
 	 * Returns the short side
 	 */
-	public double getShortSide(){
+	public int getShortSide(){
 		return this.shortSide;
 	}
 }
