@@ -43,6 +43,16 @@ public class Box implements Comparable{
 	@Override
 	public int compareTo(Object o){
 		Box b = (Box)o;
-		return Integer.compare(this.longSide, b.getLongSide());
+		int value = Integer.compare(this.longSide, b.getLongSide());
+		if (value != 0){
+			return value;
+		} else {
+			value = Integer.compare(this.shortSide, b.getShortSide());
+			if (value != 0){
+				return value;
+			} else {
+				return Integer.compare(this.height, b.getHeight());
+			}
+		}
 	}
 }

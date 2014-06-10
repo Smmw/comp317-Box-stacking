@@ -57,6 +57,13 @@ public class BoxStack implements Comparable{
 		return this.height;
 	}
 
+	public Box getTopBox(){
+		if (top == null){
+			return null;
+		}
+		return top.getBox();
+	}
+
 	/*
 	 * Returns a linked list containing the boxes in decending order
 	 */
@@ -112,6 +119,14 @@ public class BoxStack implements Comparable{
 	@Override
 	public int compareTo(Object o){
 		BoxStack s = (BoxStack)o;
-		return Integer.compare(this.height, s.getHeight());
+		int value = Integer.compare(this.height, s.getHeight());
+		if (value != 0){
+			return value;
+		} else {
+			if (this.getTopBox() == null){
+				return s.getTopBox() == null ? 0 : 1;
+			}
+			return this.getTopBox().compareTo(s.getTopBox());
+		}
 	}
 }
