@@ -45,4 +45,15 @@ public class Box implements Comparable{
 		Box b = (Box)o;
 		return Integer.compare(this.longSide, b.getLongSide());
 	}
+
+    /**
+     * Returns a string representation of the box
+     */
+    @Override
+    public String toString() {
+	return String.format("Box <%d,%d,%d>",
+			     this.height,
+			     this.longSide,
+			     this.shortSide);
+    }
 }
