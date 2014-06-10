@@ -37,6 +37,44 @@ public class Box implements Comparable{
 		return this.shortSide;
 	}
 
+    /**
+     * Rotate the box by swapping the short side and the height
+     */
+    public void swapShort() {
+	int tmp = this.shortSide;
+	this.shortSide = this.height;
+	this.height = tmp;
+
+	fixBase();
+    }
+
+    /**
+     * Rotate the box by swapping the long side and the height
+     */
+    public void swapLong() {
+	int tmp = this.longSide;
+	this.longSide = this.height;
+	this.height = tmp;
+	
+	fixBase();
+    }
+
+    /**
+     * Ensure the longSide is the long side, and shortSide is the
+     * short side of the base.
+     * This is useful after swapping one for the height to ensure
+     * the values are still correct.
+     */
+    private void fixBase() {
+	int tmp;
+
+	if (this.shortSide > this.longSide) {
+	    tmp = this.longSide;
+	    this.longSide = this.shortSide;
+	    this.shortSide = tmp;
+	}
+    }
+
 	/*
 	 * Compares the longSide of the box
 	 */
@@ -55,4 +93,15 @@ public class Box implements Comparable{
 			}
 		}
 	}
+
+    /**
+     * Returns a string representation of the box
+     */
+    @Override
+    public String toString() {
+	return String.format("Box <%d,%d,%d>",
+			     this.height,
+			     this.longSide,
+			     this.shortSide);
+    }
 }
