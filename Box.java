@@ -1,7 +1,7 @@
 /**
  * A box
  */
-public class Box{
+public class Box implements Comparable{
 	private int height;
 	private int longSide;
 	private int shortSide;
@@ -35,5 +35,14 @@ public class Box{
 	 */
 	public int getShortSide(){
 		return this.shortSide;
+	}
+
+	/*
+	 * Compares the longSide of the box
+	 */
+	@Override
+	public int compareTo(Object o){
+		Box b = (Box)o;
+		return Integer.compare(this.longSide, b.getLongSide());
 	}
 }
