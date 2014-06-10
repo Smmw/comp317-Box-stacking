@@ -23,23 +23,23 @@ public class GeneticAlgorithm {
     static final double FATHER_RATIO = 0.5;
 
     // Mutation probabilities
-    static final double P_swapShort = 0.0;
-    static final double P_swapLong = 0.0;
+    static final double P_swapShort = 0.4;
+    static final double P_swapLong = 0.4;
 
     // Birth mutation probability
-    static final double P_birthSwapShort = 0.0;
-    static final double P_birthSwapLong = 0.0;
+    static final double P_birthSwapShort = 0.3;
+    static final double P_birthSwapLong = 0.3;
 
     // Number of genes in a pool
-    static final int POOL_SIZE = 100;
+    static final int POOL_SIZE = 3;
 
     // NOTE: The ratio values should add to POOL_SIZE
     // Number of genes to keep between rounds
-    static final int KEEP_RATIO = 30;
+    static final int KEEP_RATIO = 2;
     // Number of genes to create through breeding
-    static final int BREED_RATIO = 50;
+    static final int BREED_RATIO = 1;
     // Number of genes to create through mutation
-    static final int MUTATE_RATIO = 20;
+    static final int MUTATE_RATIO = 0;
 
 
     ArrayList<Box> boxes;
@@ -59,6 +59,9 @@ public class GeneticAlgorithm {
 	 */
 	public Gene(ArrayList<Box> boxes) {
 	    Box tmp;
+
+	    this.boxes = new ArrayList<Box>();
+
 	    for (Box b : boxes) {
 		// Clone the box
 		tmp = new Box(b.getHeight(),
@@ -66,8 +69,8 @@ public class GeneticAlgorithm {
 			      b.getShortSide());
 
 		// Apply mutations
-		mutateSwapShort(tmp2, P_swapShort);
-		mutateSwapLong(tmp2, P_swapLong);
+		mutateSwapShort(tmp, P_swapShort);
+		mutateSwapLong(tmp, P_swapLong);
 
 		// Save the box into the list
 		this.boxes.add(tmp);
@@ -84,15 +87,17 @@ public class GeneticAlgorithm {
 	    int N_boxes = father.getBoxes().size();
 	    int N_father, index;
 
+	    this.boxes = new ArrayList<Box>();
+
 	    // Make sure the father and the mother are the same size
 	    // Maybe this will catch bugs...
-	    if (mother.getBoxes().size != N_boxes)
+	    if (mother.getBoxes().size() != N_boxes)
 		throw new RuntimeException("Father and Mother box lists differ in size!");
 
 	    // Take a percentage of the father
 	    N_father = (int)(N_boxes * BREED_RATIO);
 	    for (index = 0; index < N_father; index++) {
-		tmp = father.getBoxes()[index];
+		tmp = father.getBoxes().get(index);
 		tmp2 = new Box(tmp.getHeight(),
 			       tmp.getLongSide(),
 			       tmp.getShortSide());
@@ -106,7 +111,7 @@ public class GeneticAlgorithm {
 
 	    // Take the rest from the mother
 	    for (; index < N_boxes; index++) {
-		tmp = mother.getBoxes()[index];
+		tmp = mother.getBoxes().get(index);
 		tmp2 = new Box(tmp.getHeight(),
 			       tmp.getLongSide(),
 			       tmp.getShortSide());
@@ -128,7 +133,7 @@ public class GeneticAlgorithm {
 		b.swapShort();
 	}
 
-	private void mutateSwapLong(double P) {
+	private void mutateSwapLong(Box b, double P) {
 	    double r = Math.random();
 
 	    if (r < P)
@@ -164,8 +169,14 @@ public class GeneticAlgorithm {
 	 */
 	@Override
 	public int compareTo(Gene g) {
+	    // If we haven't cached the stack yet, calculate it.
+	    if (this.stack == null) {
+		Stacker s = new Stacker();
+		this.stack = s.stack(this.boxes);
+	    }
+
 	    return Integer.compare(this.stack.getHeight(),
-				   g.getStack().getHeight());
+				   g.getBoxStack().getHeight());
 	}
     }
 
@@ -177,16 +188,17 @@ public class GeneticAlgorithm {
      *                 generated
      * @returns The best stack that can be made
      */
-    public static BoxStack FindBest(ArrayList<Box> boxes, int maxGenes) {
+    public BoxStack FindBest(ArrayList<Box> boxes, int maxGenes) {
 	ArrayList<Gene> genePool = new ArrayList<Gene>();
-	int poolSize = Math.min(POOL_SIZE, maxGenes);
+	int poolSize;
 	int roundNumber = 0;
-
 	int breedCounter, mutateCounter, index;
+
+	poolSize = Math.min(POOL_SIZE, maxGenes);
 
 	// Create the initial gene pool, subtracting the number of
 	// genes we are allowed to create
-	for (i = 0; i < poolSize; i++) {
+	for (int i = 0; i < poolSize; i++) {
 	    Gene g = new Gene(boxes);
 	    genePool.add(g);
 	    maxGenes--;
@@ -201,7 +213,7 @@ public class GeneticAlgorithm {
 
 	    // Create the next pool
 	    // Only keep a certain number of elements
-	    genePool.removeRange(KEEP_RATIO, genePool.size());
+	    genePool.subList(KEEP_RATIO, genePool.size()).clear();
 
 	    // Breed some children into the pool
 	    // The best will be bred with as many other genes as it
@@ -211,8 +223,8 @@ public class GeneticAlgorithm {
 	    index = 1;
 	    while (maxGenes > 0 && breedCounter > 0) {
 		// Breed a gene
-		Gene g = new Gene(genePool[0].getBoxes(),
-				  genePool[index++].getBoxes());
+		Gene g = new Gene(genePool.get(0),
+				  genePool.get(index++));
 
 		// Introduce into the pool
 		genePool.add(g);
@@ -228,11 +240,11 @@ public class GeneticAlgorithm {
 	    }
 
 	    // Create some mutants
-	    mutantCounter = MUTATE_RATIO;
+	    mutateCounter = MUTATE_RATIO;
 	    index = 0;
 	    while (maxGenes > 0 && mutateCounter > 0) {
 		// Mutate a gene
-		Gene g = new Gene(genePool[index].getBoxes());
+		Gene g = new Gene(genePool.get(index++).getBoxes());
 
 		// Introduce into the pool
 		genePool.add(g);
@@ -243,7 +255,7 @@ public class GeneticAlgorithm {
 		    index = 0;
 
 		// Update the counters
-		breedCounter--;
+		mutateCounter--;
 		maxGenes--;
 	    }
 	} while (maxGenes > 0);
@@ -252,6 +264,6 @@ public class GeneticAlgorithm {
 	Collections.sort(genePool);
 	Collections.reverse(genePool);
 
-	return genePool[0].getBoxStack();
+	return genePool.get(0).getBoxStack();
     }
 }
