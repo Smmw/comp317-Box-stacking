@@ -9,21 +9,21 @@ import java.util.LinkedList;
  */
 public class BoxStack implements Comparable{
 	protected int height;
-	protected Node top; 	// I also want to call it head, leaf and tail
+	protected Node bottom; 	// I also want to call it head, leaf and tail
 							// it depends how you think about it
 	/*
 	 * Makes an empty box stack
 	 */
 	public BoxStack(){
 		this.height = 0;
-		this.top = null;
+		this.bottom = null;
 	}
 	/*
 	 * Makes a box stack from an existing base
 	 */
 	protected BoxStack(Box box, BoxStack base){
 		this.height = base.getHeight() + box.getHeight();
-		this.top = new Node(box, base.getNodes());
+		this.bottom = new Node(box, base.getNodes());
 	}
 
 	/*
@@ -33,7 +33,7 @@ public class BoxStack implements Comparable{
 		if (top == null){
 			return true;
 		}
-		Box base = top.getBox();
+		Box base = bottom.getBox();
 		return box.getLongSide() > base.getLongSide()
 				&& box.getShortSide() > base.getShortSide();
 	}
@@ -57,11 +57,11 @@ public class BoxStack implements Comparable{
 		return this.height;
 	}
 
-	public Box getTopBox(){
+	public Box getBottomBox(){
 		if (top == null){
 			return null;
 		}
-		return top.getBox();
+		return bottom.getBox();
 	}
 
 	/*
@@ -69,17 +69,17 @@ public class BoxStack implements Comparable{
 	 */
 	public LinkedList<Box> toList(){
 		LinkedList<Box> list = new LinkedList<Box>();
-		for (Node node = this.top; node != null; node = node.getBase()){
+		for (Node node = this.bottom; node != null; node = node.getBase()){
 			list.offerLast(node.getBox());
 		}
 		return list;
 	}
 	
 	/*
-	 * Returns the top node of the stack
+	 * Returns the bottom node of the stack
 	 */
 	protected Node getNodes(){
-		return this.top;
+		return this.bottom;
 	}
 
 	/**
@@ -123,10 +123,10 @@ public class BoxStack implements Comparable{
 		if (value != 0){
 			return value;
 		} else {
-			if (this.getTopBox() == null){
-				return s.getTopBox() == null ? 0 : 1;
+			if (this.getBottomBox() == null){
+				return s.getBottomBox() == null ? 0 : 1;
 			}
-			return this.getTopBox().compareTo(s.getTopBox());
+			return this.getBottomBox().compareTo(s.getBottomBox());
 		}
 	}
 }
