@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 /**
  * A stack of boxes
  * This is a singly linked list of boxes that keeps track of the height
@@ -8,33 +9,33 @@
  */
 public class BoxStack implements Comparable{
 	protected int height;
-	protected Node top; 	// I also want to call it head, leaf and tail
+	protected Node bottom; 	// I also want to call it head, leaf and tail
 							// it depends how you think about it
 	/*
 	 * Makes an empty box stack
 	 */
 	public BoxStack(){
 		this.height = 0;
-		this.top = null;
+		this.bottom = null;
 	}
 	/*
 	 * Makes a box stack from an existing base
 	 */
 	protected BoxStack(Box box, BoxStack base){
 		this.height = base.getHeight() + box.getHeight();
-		this.top = new Node(box, base.getNodes());
+		this.bottom = new Node(box, base.getNodes());
 	}
 
 	/*
 	 * Tells you if the box may sit atop the stack
 	 */
 	public boolean fits(Box box){
-		if (top == null){
+		if (bottom == null){
 			return true;
 		}
-		Box base = top.getBox();
-		return box.getLongSide() < base.getLongSide()
-				&& box.getShortSide() < base.getShortSide();
+		Box base = bottom.getBox();
+		return box.getLongSide() > base.getLongSide()
+				&& box.getShortSide() > base.getShortSide();
 	}
 	
 	/*
@@ -55,12 +56,30 @@ public class BoxStack implements Comparable{
 	public int getHeight(){
 		return this.height;
 	}
+
+	public Box getBottomBox(){
+		if (bottom == null){
+			return null;
+		}
+		return bottom.getBox();
+	}
+
+	/*
+	 * Returns a linked list containing the boxes in decending order
+	 */
+	public LinkedList<Box> toList(){
+		LinkedList<Box> list = new LinkedList<Box>();
+		for (Node node = this.bottom; node != null; node = node.getBase()){
+			list.offerLast(node.getBox());
+		}
+		return list;
+	}
 	
 	/*
-	 * Returns the top node of the stack
+	 * Returns the bottom node of the stack
 	 */
 	protected Node getNodes(){
-		return this.top;
+		return this.bottom;
 	}
 
 	/**
@@ -100,6 +119,33 @@ public class BoxStack implements Comparable{
 	@Override
 	public int compareTo(Object o){
 		BoxStack s = (BoxStack)o;
-		return Integer.compare(this.height, s.getHeight());
+		int value = Integer.compare(this.height, s.getHeight());
+		if (value != 0){
+			return value;
+		} else {
+			if (this.getBottomBox() == null){
+				return s.getBottomBox() == null ? 0 : 1;
+			}
+			return this.getBottomBox().compareTo(s.getBottomBox());
+		}
+	}
+
+	/*
+	 * Makes a stack into a string
+	 */
+	@Override
+	public String toString(){
+		String s = "";
+		int h = this.height;
+		for (Node n = this.bottom; n != null; n = n.getBase()){
+			Box b = n.getBox();
+			s += String.format("%d %d %d (%d)%n",
+					b.getHeight(),
+					b.getLongSide(),
+					b.getShortSide(),
+					h);
+			h -= b.getHeight();
+		}
+		return s.trim();
 	}
 }

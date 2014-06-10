@@ -29,11 +29,9 @@ public class Stacker{
 		stackTree.add(new BoxStack());
 		// Stack some boxes
 		// Each box in decending order
-		for (Iterator<Box> boxIt = boxTree.descendingIterator(); boxIt.hasNext();){
-			Box box = boxIt.next();
+		for (Box box : boxTree){
 			// Stack on largest valid stack
-			for (Iterator<BoxStack> stackIt = stackTree.descendingIterator(); stackIt.hasNext();){
-				BoxStack stack = stackIt.next();
+			for (BoxStack stack : stackTree.descendingSet()){
 				if (stack.fits(box)){
 					stackTree.add(stack.stack(box));
 					break;
