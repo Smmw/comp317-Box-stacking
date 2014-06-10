@@ -34,8 +34,8 @@ public class BoxStack implements Comparable{
 			return true;
 		}
 		Box base = top.getBox();
-		return box.getLongSide() < base.getLongSide()
-				&& box.getShortSide() < base.getShortSide();
+		return box.getLongSide() > base.getLongSide()
+				&& box.getShortSide() > base.getShortSide();
 	}
 	
 	/*
