@@ -22,6 +22,8 @@ public class BioBoxStacker2000 {
 	String inLine;
 	String[] data;
 	ArrayList<Box> boxes = new ArrayList<Box>();
+	GeneticAlgorithm ga = new GeneticAlgorithm();
+	BoxStack best;
 
 	// Test input argument
 	if (args.length != 1) {
@@ -62,10 +64,11 @@ public class BioBoxStacker2000 {
 	    e.printStackTrace();
 	}
 
-	// Display all of the boxes
-	System.out.printf("There are %d boxes:\n", boxes.size());
-	for (Box b : boxes) {
-	    System.out.println(b.toString());
-	}
+	System.out.printf("There are %d boxes to stack\n", boxes.size());
+
+	// Run the GA
+	best = ga.FindBest(boxes, 10000);
+
+	System.out.println(best.toString());
     }
 }
