@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 /**
  * A stack of boxes
  * This is a singly linked list of boxes that keeps track of the height
@@ -54,6 +55,17 @@ public class BoxStack implements Comparable{
 	 */
 	public int getHeight(){
 		return this.height;
+	}
+
+	/*
+	 * Returns a linked list containing the boxes in decending order
+	 */
+	public LinkedList<Box> toList(){
+		LinkedList<Box> list = new LinkedList<Box>();
+		for (Node node = this.top; node != null; node = node.getBase()){
+			list.offerFirst(node.getBox());
+		}
+		return list;
 	}
 	
 	/*
