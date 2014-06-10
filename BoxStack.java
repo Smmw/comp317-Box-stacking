@@ -26,6 +26,27 @@ public class BoxStack{
 	}
 
 	/*
+	 * Tells you if the box may sit atop the stack
+	 */
+	public boolean fits(Box box){
+		Box base = top.getBox();
+		return box.getLongSide() < base.getLongSide()
+				&& box.getShortSide() < base.getShortSide();
+	}
+	
+	/*
+	 * Adds a box to the stack
+	 */
+	public BoxStack stack(Box box){
+		// Sanity check, unnessicary if the program is sane.
+		// TODO: Decide if it is worth removing later
+		if (!this.fits(box)){
+			throw new RuntimeException("Attempted to stack large box on small base!");
+		}
+		return new BoxStack(box, this);
+	}
+
+	/*
 	 * Returns the height of the stack
 	 */
 	public double getHeight(){
