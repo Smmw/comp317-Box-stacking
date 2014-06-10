@@ -29,6 +29,9 @@ public class BoxStack implements Comparable{
 	 * Tells you if the box may sit atop the stack
 	 */
 	public boolean fits(Box box){
+		if (top == null){
+			return true;
+		}
 		Box base = top.getBox();
 		return box.getLongSide() < base.getLongSide()
 				&& box.getShortSide() < base.getShortSide();
