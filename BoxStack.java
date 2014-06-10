@@ -114,14 +114,16 @@ public class BoxStack implements Comparable{
 	}
 
 	/*
-	 * Compares stacks by height
+	 * Compares stacks by height and base
 	 */
 	@Override
 	public int compareTo(Object o){
 		BoxStack s = (BoxStack)o;
+		// The height
 		int value = Integer.compare(this.height, s.getHeight());
 		if (value != 0){
 			return value;
+		// The base
 		} else {
 			if (this.getBottomBox() == null){
 				return s.getBottomBox() == null ? 0 : 1;
