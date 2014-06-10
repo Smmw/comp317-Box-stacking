@@ -8,8 +8,8 @@ import java.util.TreeSet;
  * The collection is ordered by the longest side on the base of the box as a tree set
  * An empty stack is made
  * This stack is placed in another Tree set
- * The boxes are traversed from largest to smallest
- * 	A new stack is formed by placing the box on top of the tallest stack it fits on
+ * The boxes are traversed from smallest to largest
+ * 	A new stack is formed by placing the box under the tallest stack it fits on
  * 	The new stack is added to the stacks
  * The traversal ends
  * The tallest stack if taken from the stacks
