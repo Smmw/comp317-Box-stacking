@@ -30,7 +30,7 @@ public class BoxStack implements Comparable{
 	 * Tells you if the box may sit atop the stack
 	 */
 	public boolean fits(Box box){
-		if (top == null){
+		if (bottom == null){
 			return true;
 		}
 		Box base = bottom.getBox();
@@ -58,7 +58,7 @@ public class BoxStack implements Comparable{
 	}
 
 	public Box getBottomBox(){
-		if (top == null){
+		if (bottom == null){
 			return null;
 		}
 		return bottom.getBox();
@@ -128,5 +128,24 @@ public class BoxStack implements Comparable{
 			}
 			return this.getBottomBox().compareTo(s.getBottomBox());
 		}
+	}
+
+	/*
+	 * Makes a stack into a string
+	 */
+	@Override
+	public String toString(){
+		String s = "";
+		int h = this.height;
+		for (Node n = this.bottom; n != null; n = n.getBase()){
+			Box b = n.getBox();
+			s += String.format("%d %d %d (%d)%n",
+					b.getHeight(),
+					b.getLongSide(),
+					b.getShortSide(),
+					h);
+			h -= b.getHeight();
+		}
+		return s.trim();
 	}
 }
