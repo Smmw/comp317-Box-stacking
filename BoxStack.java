@@ -6,7 +6,7 @@
  * It is the stacks job to ensure the stack is valid. You can't trust a box with
  * 	a job this important anyway.
  */
-public class BoxStack{
+public class BoxStack implements Comparable{
 	protected int height;
 	protected Node top; 	// I also want to call it head, leaf and tail
 							// it depends how you think about it
@@ -89,5 +89,14 @@ public class BoxStack{
 		public Node getBase(){
 			return this.base;
 		}
+	}
+
+	/*
+	 * Compares stacks by height
+	 */
+	@Override
+	public int compareTo(Object o){
+		BoxStack s = (BoxStack)o;
+		return Integer.compare(this.height, s.getHeight());
 	}
 }
