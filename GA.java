@@ -8,9 +8,9 @@ import java.util.Random;
  * A genetic algorithm to select the orientation of boxes
  */
 public class GA{
-	static final double CROSSOVER = 0.5;
-	static final double MUTATION = 0.01;
-	static final double POPULATION = 0.1;
+	static final double CROSSOVER = 0.75;
+	static final double MUTATION = 0.02;
+	static final double POPULATION = 0.05;
 	static final double REJECT = 0.75;
 
 	static final Stacker STACKER = new Stacker();
@@ -127,7 +127,7 @@ public class GA{
 
 	public BoxStack optimise(List<Box> boxes, int remainingGenes){
 		GA.boxes = boxes;
-		int population = (int)Math.ceil(boxes.size()*POPULATION);
+		int population = (int)Math.ceil(remainingGenes*POPULATION);
 		ArrayList<Gene> genes = new ArrayList<Gene>(population);
 		while (genes.size() < population){
 			genes.add(new Gene(boxes.size()));
