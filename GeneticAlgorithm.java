@@ -31,15 +31,15 @@ public class GeneticAlgorithm {
     static final double P_birthSwapLong = 0.3;
 
     // Number of genes in a pool
-    static final int POOL_SIZE = 3;
+    static final int POOL_SIZE = 50;
 
     // NOTE: The ratio values should add to POOL_SIZE
     // Number of genes to keep between rounds
-    static final int KEEP_RATIO = 2;
+    static final int KEEP_RATIO = 26;
     // Number of genes to create through breeding
-    static final int BREED_RATIO = 1;
+    static final int BREED_RATIO = 18;
     // Number of genes to create through mutation
-    static final int MUTATE_RATIO = 0;
+    static final int MUTATE_RATIO = 6;
 
 
     ArrayList<Box> boxes;
@@ -60,6 +60,7 @@ public class GeneticAlgorithm {
 	public Gene(ArrayList<Box> boxes) {
 	    Box tmp;
 
+	    Stacker s = new Stacker();
 	    this.boxes = new ArrayList<Box>();
 
 	    for (Box b : boxes) {
@@ -76,7 +77,7 @@ public class GeneticAlgorithm {
 		this.boxes.add(tmp);
 	    }
 
-	    this.stack = null;
+	    this.stack = s.stack(this.boxes);
 	}
 
 	/**
@@ -87,6 +88,7 @@ public class GeneticAlgorithm {
 	    int N_boxes = father.getBoxes().size();
 	    int N_father, index;
 
+	    Stacker s = new Stacker();
 	    this.boxes = new ArrayList<Box>();
 
 	    // Make sure the father and the mother are the same size
@@ -95,7 +97,7 @@ public class GeneticAlgorithm {
 		throw new RuntimeException("Father and Mother box lists differ in size!");
 
 	    // Take a percentage of the father
-	    N_father = (int)(N_boxes * BREED_RATIO);
+	    N_father = (int)(N_boxes * FATHER_RATIO);
 	    for (index = 0; index < N_father; index++) {
 		tmp = father.getBoxes().get(index);
 		tmp2 = new Box(tmp.getHeight(),
@@ -123,7 +125,7 @@ public class GeneticAlgorithm {
 		this.boxes.add(tmp2);
 	    }
 
-	    this.stack = null;
+	    this.stack = s.stack(this.boxes);
 	}
 
 	private void mutateSwapShort(Box b, double P) {
@@ -145,22 +147,10 @@ public class GeneticAlgorithm {
 	}
 
 	public int getHeight() {
-	    // If we haven't cached the stack yet, calculate it.
-	    if (this.stack == null) {
-		Stacker s = new Stacker();
-		this.stack = s.stack(this.boxes);
-	    }
-
 	    return this.stack.getHeight();
 	}
 
 	public BoxStack getBoxStack() {
-	    // If we haven't cached the stack yet, calculate it.
-	    if (this.stack == null) {
-		Stacker s = new Stacker();
-		this.stack = s.stack(this.boxes);
-	    }
-
 	    return this.stack;
 	}
 
@@ -169,14 +159,7 @@ public class GeneticAlgorithm {
 	 */
 	@Override
 	public int compareTo(Gene g) {
-	    // If we haven't cached the stack yet, calculate it.
-	    if (this.stack == null) {
-		Stacker s = new Stacker();
-		this.stack = s.stack(this.boxes);
-	    }
-
-	    return Integer.compare(this.stack.getHeight(),
-				   g.getBoxStack().getHeight());
+	    return Integer.compare(this.getHeight(), g.getHeight());
 	}
     }
 

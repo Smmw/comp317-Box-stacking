@@ -22,6 +22,7 @@ public class BioBoxStacker2000 {
 	String inLine;
 	String[] data;
 	ArrayList<Box> boxes = new ArrayList<Box>();
+	int N;
 	GeneticAlgorithm ga = new GeneticAlgorithm();
 	BoxStack best;
 
@@ -46,7 +47,7 @@ public class BioBoxStacker2000 {
 	try {
 	    while ((inLine = inFile.readLine()) != null) {
 		// Get the box dimensions
-		data = inLine.split(",");
+		data = inLine.split(" ");
 	    
 		// Ensure they're valid
 		// This happens if the last line is blank, so it's
@@ -66,8 +67,14 @@ public class BioBoxStacker2000 {
 
 	System.out.printf("There are %d boxes to stack\n", boxes.size());
 
+	// Calculate how many genes we can create
+	N = 3 * boxes.size();
+	N *= N;
+
+	System.out.printf("We can create %d genes to find a solution\n", N);
+
 	// Run the GA
-	best = ga.FindBest(boxes, 10000);
+	best = ga.FindBest(boxes, N);
 
 	System.out.println(best.toString());
     }
