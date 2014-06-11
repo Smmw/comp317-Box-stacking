@@ -76,7 +76,7 @@ public class Box implements Comparable{
     }
 
 	/*
-	 * Compares the longSide of the box
+	 * Compares the shortSide, longSide and height of the box
 	 */
 	@Override
 	public int compareTo(Object o){
