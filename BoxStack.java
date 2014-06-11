@@ -138,15 +138,15 @@ public class BoxStack implements Comparable{
 	@Override
 	public String toString(){
 		String s = "";
-		int h = this.height;
+		int h = 0;
 		for (Node n = this.bottom; n != null; n = n.getBase()){
 			Box b = n.getBox();
+			h += b.getHeight();
 			s += String.format("%d %d %d (%d)%n",
 					b.getHeight(),
 					b.getLongSide(),
 					b.getShortSide(),
 					h);
-			h -= b.getHeight();
 		}
 		return s.trim();
 	}
