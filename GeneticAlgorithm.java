@@ -18,28 +18,24 @@ public class GeneticAlgorithm {
      *        Algorithm Parameters
      * ---------------------------------------------------------------
      */
-    // Fraction of the father to keep
-    // child = father*FATHER_RATIO + mother*1-FATHER_RATIO
-    static final double FATHER_RATIO = 0.5;
-
     // Mutation probabilities
-    static final double P_swapShort = 0.4;
-    static final double P_swapLong = 0.4;
+    static final double P_swapShort = 0.01;
+    static final double P_swapLong = 0.01;
 
     // Birth mutation probability
-    static final double P_birthSwapShort = 0.3;
-    static final double P_birthSwapLong = 0.3;
+    static final double P_birthSwapShort = 0.01;
+    static final double P_birthSwapLong = 0.01;
 
     // Number of genes in a pool
-    static final int POOL_SIZE = 50;
+    static final int POOL_SIZE = 100;
 
     // NOTE: The ratio values should add to POOL_SIZE
     // Number of genes to keep between rounds
-    static final int KEEP_RATIO = 26;
+    static final int KEEP_RATIO = 30;
     // Number of genes to create through breeding
-    static final int BREED_RATIO = 18;
-    // Number of genes to create through mutation
-    static final int MUTATE_RATIO = 6;
+    static final int BREED_RATIO = 40;
+    // Number of genes to create through mutating kept genes
+    static final int MUTATE_RATIO = 30;
 
 
     ArrayList<Box> boxes;
@@ -97,7 +93,8 @@ public class GeneticAlgorithm {
 		throw new RuntimeException("Father and Mother box lists differ in size!");
 
 	    // Take a percentage of the father
-	    N_father = (int)(N_boxes * FATHER_RATIO);
+	    double r = Math.random();
+	    N_father = (int)(N_boxes * r);
 	    for (index = 0; index < N_father; index++) {
 		tmp = father.getBoxes().get(index);
 		tmp2 = new Box(tmp.getHeight(),
@@ -192,6 +189,7 @@ public class GeneticAlgorithm {
      */
     public BoxStack FindBest(ArrayList<Box> boxes, int maxGenes) {
 	ArrayList<Gene> genePool = new ArrayList<Gene>();
+	//	TreeSet<Gene> genePool = new TreeSet<Gene>();
 	int poolSize;
 	int roundNumber = 0;
 	int breedCounter, mutateCounter, index;
@@ -207,34 +205,32 @@ public class GeneticAlgorithm {
 	}
 
 	do {
-	    // Sort the list by the stack height (ascending)
-	    Collections.sort(genePool);
-	    // Reverse the list so that the list is sorted by height
-	    // descending.
-	    Collections.reverse(genePool);
+	    // Sort the list by the stack height (descending)
+	    Collections.sort(genePool, Collections.reverseOrder());
 
 	    // Create the next pool
 	    // Only keep a certain number of elements
 	    genePool.subList(KEEP_RATIO, genePool.size()).clear();
 
 	    // Breed some children into the pool
-	    // The best will be bred with as many other genes as it
-	    // takes, descending.  If we hit the end of the parents,
-	    // wrap back around.
+	    // We breed random selections within the pool
 	    breedCounter = BREED_RATIO;
-	    index = 1;
 	    while (maxGenes > 0 && breedCounter > 0) {
+		int father = 0;
+		int mother = 0;
+		
+		// Select parents
+		while (father == mother) {
+		    father = (int)(Math.random() * KEEP_RATIO);
+		    mother = (int)(Math.random() * KEEP_RATIO);
+		}
+
 		// Breed a gene
-		Gene g = new Gene(genePool.get(0),
-				  genePool.get(index++));
+		Gene g = new Gene(genePool.get(father),
+				  genePool.get(mother));
 
 		// Introduce into the pool
 		genePool.add(g);
-
-		// Wrap the index if we've run out of parents
-		// (children aren't old enough to breed!)
-		if (index >= KEEP_RATIO)
-		    index = 1;
 
 		// Update the counters
 		breedCounter--;
@@ -245,16 +241,13 @@ public class GeneticAlgorithm {
 	    mutateCounter = MUTATE_RATIO;
 	    index = 0;
 	    while (maxGenes > 0 && mutateCounter > 0) {
+		int selection = (int)(Math.random() * KEEP_RATIO);
+
 		// Mutate a gene
-		Gene g = new Gene(genePool.get(index++).getBoxes());
+		Gene g = new Gene(genePool.get(selection).getBoxes());
 
 		// Introduce into the pool
 		genePool.add(g);
-
-		// Wrap the index if we've run out of original genes
-		// (Children shouldn't be mutants!)
-		if (index >= KEEP_RATIO)
-		    index = 0;
 
 		// Update the counters
 		mutateCounter--;
@@ -263,8 +256,7 @@ public class GeneticAlgorithm {
 	} while (maxGenes > 0);
 
 	// Sort the pool one last time, and return the best stack
-	Collections.sort(genePool);
-	Collections.reverse(genePool);
+	Collections.sort(genePool, Collections.reverseOrder());
 
 	return genePool.get(0).getBoxStack();
     }
