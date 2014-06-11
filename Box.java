@@ -5,15 +5,32 @@ public class Box implements Comparable{
 	private int height;
 	private int longSide;
 	private int shortSide;
+	private int[] values;
 
 	/*
 	 * Makes a box, will make the long side the long side on it's own.
 	 * It doesn't trust you anyway.
 	 */
 	public Box(int height, int side1, int side2){
-		this.height = height;
-		this.longSide = side1 > side2 ? side1 : side2;
-		this.shortSide = side2 > side1 ? side1 : side2;
+		values = new int[]{height, side1, side2};
+	}
+
+	public void rotate(int r){
+		if (r == 0){
+			this.height = values[0];
+			this.longSide = values[1] > values[2] ? values[1] : values[2];
+			this.shortSide = values[2] > values[1] ? values[1] : values[2];
+		} else if (r == 1){
+			this.height = values[1];
+			this.longSide = values[0] > values[2] ? values[0] : values[2];
+			this.shortSide = values[2] > values[0] ? values[0] : values[2];
+		} else if (r == 2){
+			this.height = values[2];
+			this.longSide = values[0] > values[1] ? values[0] : values[1];
+			this.shortSide = values[1] > values[0] ? values[0] : values[1];
+		} else {
+			throw new RuntimeException(String.format("Invalid Rotation.%nR: %d", r));
+		}
 	}
 
 	/*

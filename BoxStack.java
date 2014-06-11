@@ -127,6 +127,8 @@ public class BoxStack implements Comparable{
 		} else {
 			if (this.getBottomBox() == null){
 				return s.getBottomBox() == null ? 0 : 1;
+			} else if (s.getBottomBox() == null){
+				return this.getBottomBox() == null ? 0 : 1;
 			}
 			return this.getBottomBox().compareTo(s.getBottomBox());
 		}

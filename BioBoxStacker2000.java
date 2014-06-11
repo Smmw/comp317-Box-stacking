@@ -23,7 +23,7 @@ public class BioBoxStacker2000 {
 	String[] data;
 	ArrayList<Box> boxes = new ArrayList<Box>();
 	int N;
-	GeneticAlgorithm ga = new GeneticAlgorithm();
+	GA ga = new GA();
 	BoxStack best;
 
 	// Test input argument
@@ -74,7 +74,7 @@ public class BioBoxStacker2000 {
 	System.out.printf("We can create %d genes to find a solution\n", N);
 
 	// Run the GA
-	best = ga.FindBest(boxes, N);
+	best = ga.optimise(boxes, N);
 
 	System.out.println(best.toString());
     }
