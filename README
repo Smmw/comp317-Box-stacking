@@ -1,0 +1,16 @@
+Dan Collins 1183446 & Severin Mahoney-Marsh 1181754
+
+To run compile BioBoxStacker2000.java and run with 'java BioBoxStacker2000 <Boxes file path>'
+
+If the explanation is too long go to the tl;dr at the bottom.
+
+The assignment has two significant parts; the GeneticAlgorithm and the Stacker.
+
+The GeneticAlgorithm determines which base to use with a random population which it culls breeds and clones. Both breeding and cloning have a chance of mutation, this chance applies to each box not each gene so multiple mutations are possible. Breeding is done by selecting two members of the population after the cull, the two members are crossed over at one random point to produce a hybrid. The hybrid is then, probably, mutated. The proportions of members kept, breed and cloned is fixed by constants rather than being probabilistic. All members of the surviving population have an equal chance to breed. Once the population is full it is culled. Their fitness is determined by getting the hight of the optimal stack their boxes produce. They are ordered by fitness and only the best up to the kept constant are preserved.
+
+The Stacker is based of the Optimality Principal. The boxes are ordered by their shortest side (if they are equal then the longer side and if that is equal the the height is used) by placing them in a Tree. An empty stack is then made and placed in another tree. Stacks are ordered by hight and in the case they are equal the size of the base. Then every box in order from smallest to largest is placed on the largest stack it fits on. This creates a new stack which is added to the stack tree. To determine the largest stack a box can fit on the stack tree is traversed in order from tallest to shortest and the stacks are checked to ensure they have a small enough base to fit the box. The trees make a few optimisations on their own. First the box tree removes identical boxes so they do not have to be concidered. Secondly the stack tree removes stacks which may not have identical boxes but to have the same height and base size. The stack tree also stops all stacks from being considered for all boxes helping the Stacker tend away from it's quadratic nature. It's still quadratic though, some boxes just suck.
+
+For large sets of boxes the algorithm takes quite a while to finish (The 1000 box set tends to take more than an hour, it does complete however and the largest stack it has found was 76375). Should that be too long (and fair enough too!) it still performed quite well with (3n)^2/50 on the large set and that dropped the runtime down to around a minute. If you wish to do this (or something similar) go to line 72 of the BioBoxStacker2000 and divide the number there by 50 (or whatever, you could subtract if you want just don't make it too small. Negitive would be particularly problematic.)
+
+tl;dr
+The genetic algorithm chooses bases. The stacker uses the optimality principal to make the best stack it can from the bases. It can take a while on big sets, but still works ok if you reduce the number of genes used.
